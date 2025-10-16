@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
 from src.models.BaseModels import Usuario
@@ -46,7 +46,7 @@ def actualizar_usuario(id: int, formulario: ActualizarUsuarioDTO = Depends(updat
     )
 
 # ======================= ELIMINAR USUARIO =======================
-@router.delete("{id}", response_model=RespuestaGenerica[None])
+@router.delete("/{id}", response_model=RespuestaGenerica[None])
 def eliminar_usuario(id: int, session: Session = Depends(get_session)):
     usv.eliminar_usuario(id, session)
 
