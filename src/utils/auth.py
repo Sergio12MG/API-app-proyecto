@@ -23,7 +23,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30 # Expira en 30 minutos
 # Objeto para encriptar contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 
 # ============ Validaciones de JWT ============
 # Verificación para que la contraseña en bytes no supere los 72 bytes
@@ -92,15 +92,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Dep
 
     # 1. Decodificar el token
     payload = decode_access_token(token)
-    # 2. Obtener el valor del campo 'sub' (el usuario) de las credenciales
-    username: Optional[str] = payload.get("sub")
+    # 2. Obtener el valor del campo 'sub' (el correo) de las credenciales
+    user_email: Optional[str] = payload.get("sub")
 
-    # 3. Verificar que sí haya un nombre de usuario
-    if username is None:
+    # 3. Verificar que sí haya un correo
+    if user_email is None:
         raise credentials_exception
     
-    # 4. Buscar al usuario en la base de datos por el nombre obtenido
-    consulta = select(Usuario).where(Usuario.nombre == username)
+    # 4. Buscar al usuario en la base de datos por el correo obtenido
+    consulta = select(Usuario).where(Usuario.correo == user_email)
     user = session.exec(consulta).first()
 
     # 5. Verificar que sí exista el usuario
