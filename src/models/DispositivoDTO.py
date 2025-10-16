@@ -3,18 +3,10 @@ from fastapi import Form
 from typing import Optional
 
 # ========= MODELOS =========
-# Para lectura
-class DispositivoDTO(BaseModel):
-    id: int
-    nombre: str
-    imagen: str
-    usuario_id: int
-
 # Para registrar
-class CrearDispositivoDTO(BaseModel):
+class DispositivoDTO(BaseModel):
     nombre: str
     imagen: Optional[str] = None
-    usuario_id: int
 
 # Para actualizar
 class ActualizarDTO(BaseModel):
@@ -25,10 +17,9 @@ class ActualizarDTO(BaseModel):
 # Para crear
 def create_device_form(
         nombre: str = Form(..., max_length=100),
-        imagen: str = Form("", max_length=255),
-        usuario_id: int = Form(..., gt=0)
+        imagen: str = Form("", max_length=255)
 ):
-    return CrearDispositivoDTO(nombre=nombre, imagen=imagen or None, usuario_id=usuario_id)
+    return DispositivoDTO(nombre=nombre, imagen=imagen or None)
 
 # Para actualizar
 def update_device_form(
